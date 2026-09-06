@@ -369,6 +369,42 @@
     display:flex; justify-content:center; gap:24px; flex-wrap:wrap;
   }
 
+  /* ---------- PORTFOLIO ---------- */
+  .portfolio-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:24px;
+  }
+  @media (max-width:760px){ .portfolio-grid{ grid-template-columns:1fr; } }
+  .portfolio-card{
+    border:1px solid rgba(35,48,63,0.2);
+    background:var(--paper-2);
+    overflow:hidden;
+  }
+  .mockup-frame{
+    background:var(--ink);
+    padding:18px;
+  }
+  .mockup-frame svg{ width:100%; height:auto; display:block; }
+  .mock-fill{ fill:var(--paper); }
+  .mock-fill-soft{ fill:rgba(236,231,221,0.12); }
+  .mock-stroke{ stroke:var(--line); stroke-width:1.2; fill:none; }
+  .mock-accent{ fill:var(--accent); }
+  .mock-text{ font-family:'IBM Plex Mono', monospace; font-size:9px; fill:var(--text-dark-muted); }
+  .portfolio-body{ padding:22px 24px; }
+  .concept-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.02em;
+    color:var(--accent-2);
+    border:1px solid var(--accent-2);
+    padding:3px 8px;
+    margin-bottom:12px;
+  }
+  .portfolio-body h3{ font-size:17px; font-weight:600; margin-bottom:8px; }
+  .portfolio-body p{ font-size:14px; color:var(--charcoal-soft); margin:0; }
+
   footer{
     padding:26px 0;
     text-align:center;
@@ -389,6 +425,7 @@
       <a href="#systems">Systems</a>
       <a href="#experience">Experience</a>
       <a href="#engagements">Engagements</a>
+      <a href="#portfolio">Portfolio</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -523,7 +560,7 @@
 
       <div class="tl-item">
         <div class="tl-year">MAY 2016 — FEB 2018</div>
-       
+        <h3>Unisys Global Services India</h3>
         <div class="tl-role">Software Engineer 4</div>
         <ul>
           <li>Designed master pages, page layouts, and search display templates for a multilingual public site (Unisys.com).</li>
@@ -536,7 +573,7 @@
 
       <div class="tl-item">
         <div class="tl-year">DEC 2013 — APR 2016</div>
-      
+        <h3>Utile Software Solutions</h3>
         <div class="tl-role">Software Engineer</div>
         <ul>
           <li>Built a custom intranet with Visual Studio web parts, Exchange calendar sync, and discussion forums on SharePoint 2013.</li>
@@ -548,10 +585,10 @@
 
       <div class="tl-item">
         <div class="tl-year">FEB 2013 — NOV 2013</div>
-        
+        <h3>FCS Ltd</h3>
         <div class="tl-role">Technical Trainee, .NET</div>
         <ul>
-          <li>Developed and deployed a real estate networking platform in ASP.NET, supporting a multilingual public site.</li>
+          <li>Developed and deployed a real estate networking platform (ProxioPro) in ASP.NET, supporting a multilingual public site.</li>
         </ul>
         <div class="tl-tags">
           <span>C#</span><span>ADO.NET</span><span>SQL Server</span>
@@ -581,6 +618,135 @@
         <h3>Internal tools</h3>
         <p>Power Apps built for the tools staff actually reach for day to day — forms, trackers, and dashboards that plug directly into SharePoint data.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">05</span><h2>Portfolio</h2></div>
+    <p class="systems-intro" style="color:var(--charcoal-soft); margin-bottom:44px;">Real client screenshots are being added as they become available. In the meantime, these are representative concept sheets showing the kind of solutions built — not screenshots of an actual deployment.</p>
+    <div class="portfolio-grid">
+
+      <div class="portfolio-card">
+        <div class="mockup-frame">
+          <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="380" height="28" class="mock-fill-soft"/>
+            <rect x="20" y="19" width="60" height="10" class="mock-fill"/>
+            <rect x="300" y="19" width="35" height="10" class="mock-stroke"/>
+            <rect x="340" y="19" width="35" height="10" class="mock-stroke"/>
+            <rect x="10" y="46" width="380" height="70" class="mock-fill-soft"/>
+            <rect x="24" y="58" width="160" height="12" class="mock-fill"/>
+            <rect x="24" y="76" width="220" height="8" class="mock-stroke"/>
+            <rect x="24" y="90" width="90" height="16" class="mock-accent"/>
+            <rect x="10" y="124" width="118" height="106" class="mock-fill-soft"/>
+            <circle cx="69" cy="150" r="12" class="mock-stroke"/>
+            <rect x="30" y="172" width="78" height="8" class="mock-stroke"/>
+            <rect x="10" y="240" width="0" height="0"/>
+            <rect x="136" y="124" width="118" height="106" class="mock-fill-soft"/>
+            <circle cx="195" cy="150" r="12" class="mock-stroke"/>
+            <rect x="156" y="172" width="78" height="8" class="mock-stroke"/>
+            <rect x="262" y="124" width="128" height="106" class="mock-fill-soft"/>
+            <rect x="274" y="136" width="104" height="7" class="mock-stroke"/>
+            <rect x="274" y="150" width="104" height="7" class="mock-stroke"/>
+            <rect x="274" y="164" width="80" height="7" class="mock-stroke"/>
+            <rect x="274" y="178" width="104" height="7" class="mock-stroke"/>
+            <text x="20" y="230" class="mock-text">FIG. 01 — INTRANET HOME</text>
+          </svg>
+        </div>
+        <div class="portfolio-body">
+          <span class="concept-tag">CONCEPT SAMPLE</span>
+          <h3>Property intranet homepage</h3>
+          <p>Landing page layout for a property management intranet: announcements, quick-access tiles for leasing/maintenance/HR, and a resource panel — the structure used across most SharePoint intranet builds.</p>
+        </div>
+      </div>
+
+      <div class="portfolio-card">
+        <div class="mockup-frame">
+          <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="20" width="90" height="34" class="mock-fill-soft"/>
+            <text x="55" y="41" text-anchor="middle" class="mock-text">REQUEST</text>
+            <path class="mock-stroke" d="M100,37 L150,37"/>
+            <rect x="150" y="20" width="90" height="34" class="mock-fill-soft"/>
+            <text x="195" y="41" text-anchor="middle" class="mock-text">MGR REVIEW</text>
+            <path class="mock-stroke" d="M240,37 L290,37"/>
+            <polygon points="290,15 340,37 290,59 240,37" class="mock-stroke"/>
+            <text x="290" y="41" text-anchor="middle" class="mock-text">OK?</text>
+            <path class="mock-stroke" d="M290,59 L290,110"/>
+            <text x="300" y="85" class="mock-text">YES</text>
+            <rect x="220" y="110" width="140" height="34" class="mock-fill-soft"/>
+            <text x="290" y="131" text-anchor="middle" class="mock-text">NOTIFY + ARCHIVE</text>
+            <path class="mock-stroke" d="M240,37 L60,37 L60,90"/>
+            <text x="70" y="65" class="mock-text">NO</text>
+            <rect x="10" y="90" width="100" height="34" class="mock-fill-soft"/>
+            <text x="60" y="111" text-anchor="middle" class="mock-text">RETURN TO REQUESTER</text>
+            <path class="mock-stroke" d="M60,124 L60,150 L220,150 L220,127"/>
+            <text x="20" y="230" class="mock-text">FIG. 02 — APPROVAL FLOW</text>
+          </svg>
+        </div>
+        <div class="portfolio-body">
+          <span class="concept-tag">CONCEPT SAMPLE</span>
+          <h3>Approval workflow automation</h3>
+          <p>A Power Automate flow pattern used for leasing and maintenance approvals: request intake, manager review, conditional routing, and automatic notification and archival to a SharePoint list.</p>
+        </div>
+      </div>
+
+      <div class="portfolio-card">
+        <div class="mockup-frame">
+          <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+            <rect x="130" y="10" width="140" height="222" rx="10" class="mock-stroke"/>
+            <rect x="142" y="26" width="116" height="10" class="mock-fill-soft"/>
+            <text x="200" y="34" text-anchor="middle" class="mock-text">MAINTENANCE REQUEST</text>
+            <rect x="142" y="46" width="116" height="18" class="mock-stroke"/>
+            <text x="150" y="58" class="mock-text">Property...</text>
+            <rect x="142" y="70" width="116" height="18" class="mock-stroke"/>
+            <text x="150" y="82" class="mock-text">Unit #...</text>
+            <rect x="142" y="94" width="116" height="18" class="mock-stroke"/>
+            <text x="150" y="106" class="mock-text">Issue type...</text>
+            <rect x="142" y="118" width="116" height="30" class="mock-stroke" stroke-dasharray="3,3"/>
+            <text x="200" y="136" text-anchor="middle" class="mock-text">+ ADD PHOTO</text>
+            <rect x="142" y="156" width="116" height="20" class="mock-accent"/>
+            <text x="200" y="170" text-anchor="middle" class="mock-text" fill="#1A1204">SUBMIT</text>
+            <rect x="142" y="188" width="116" height="1" class="mock-stroke"/>
+            <text x="150" y="200" class="mock-text">Unit 4B — Leak — Open</text>
+            <text x="150" y="212" class="mock-text">Unit 2A — HVAC — Closed</text>
+            <text x="20" y="230" class="mock-text">FIG. 03 — POWER APP FORM</text>
+          </svg>
+        </div>
+        <div class="portfolio-body">
+          <span class="concept-tag">CONCEPT SAMPLE</span>
+          <h3>Maintenance request app</h3>
+          <p>A Power Apps canvas form pattern for resident or staff-submitted maintenance requests, with photo attachment and a running list of open and closed tickets pulled from SharePoint.</p>
+        </div>
+      </div>
+
+      <div class="portfolio-card">
+        <div class="mockup-frame">
+          <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+            <rect x="60" y="10" width="280" height="220" rx="8" class="mock-stroke"/>
+            <rect x="60" y="10" width="280" height="30" rx="8" class="mock-fill-soft"/>
+            <text x="200" y="30" text-anchor="middle" class="mock-text">HR ASKHR ASSISTANT</text>
+            <rect x="76" y="52" width="180" height="34" rx="6" class="mock-fill-soft"/>
+            <text x="86" y="66" class="mock-text">How many PTO days do</text>
+            <text x="86" y="78" class="mock-text">I have left this year?</text>
+            <rect x="150" y="96" width="174" height="46" rx="6" class="mock-accent"/>
+            <text x="160" y="110" class="mock-text" fill="#1A1204">You have 9 PTO days</text>
+            <text x="160" y="122" class="mock-text" fill="#1A1204">remaining. Want the link</text>
+            <text x="160" y="134" class="mock-text" fill="#1A1204">to request time off?</text>
+            <rect x="76" y="152" width="140" height="30" rx="6" class="mock-fill-soft"/>
+            <text x="86" y="170" class="mock-text">Yes, send it over</text>
+            <rect x="76" y="196" width="248" height="22" rx="4" class="mock-stroke"/>
+            <text x="86" y="211" class="mock-text">Type a question...</text>
+            <text x="20" y="238" class="mock-text">FIG. 04 — COPILOT / TEAMS BOT</text>
+          </svg>
+        </div>
+        <div class="portfolio-body">
+          <span class="concept-tag">CONCEPT SAMPLE</span>
+          <h3>HR Copilot / Teams assistant</h3>
+          <p>A Copilot Studio assistant pattern connected to SharePoint policy content, answering employee HR questions directly inside Teams and linking out to the right internal forms.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
