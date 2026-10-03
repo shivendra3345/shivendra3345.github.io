@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Career Quest</title>
+<meta name="description" content="A playable map of IT careers: pick a role, learn the skills, defeat the certification exams, and level up.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1024; --panel:#171A38; --panel-2:#1F2347; --line:#2E3366;
+    --text:#ECEFFF; --muted:#9BA4D8;
+    --violet:#8B7BFF; --sky:#44C8FF; --pink:#FF6F91; --mint:#4FE3B5; --amber:#FFC65C;
+    --radius:20px;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'DM Sans', system-ui, sans-serif; line-height:1.55;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(1px 1px at 78% 8%, rgba(255,255,255,.45), transparent 60%),
+      radial-gradient(1.5px 1.5px at 44% 62%, rgba(255,255,255,.35), transparent 60%),
+      radial-gradient(1px 1px at 90% 74%, rgba(255,255,255,.4), transparent 60%),
+      radial-gradient(1px 1px at 6% 86%, rgba(255,255,255,.4), transparent 60%),
+      radial-gradient(900px 500px at 85% -10%, rgba(139,123,255,.22), transparent 60%),
+      radial-gradient(700px 500px at -10% 30%, rgba(68,200,255,.12), transparent 60%);
+    background-attachment:fixed;
+  }
+  h1,h2,h3{ font-family:'Bricolage Grotesque', sans-serif; margin:0; letter-spacing:-.01em; }
+  button{ font:inherit; color:inherit; cursor:pointer; }
+  a{ color:inherit; }
+  :focus-visible{ outline:3px solid var(--amber); outline-offset:3px; border-radius:10px; }
+  .wrap{ max-width:1040px; margin:0 auto; padding:0 20px; }
+  .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+  /* HUD */
+  .hud{ position:sticky; top:0; z-index:30; background:rgba(14,16,36,.86); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+  .hud-in{ display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:center; padding:12px 20px; max-width:1040px; margin:0 auto; }
+  .avatar{ width:46px; height:46px; border-radius:14px; display:grid; place-items:center; font-size:24px; background:linear-gradient(135deg,var(--violet),var(--pink)); }
+  .hud-name{ background:transparent; border:0; border-bottom:1px dashed var(--line); color:var(--text); font:700 15px 'DM Sans'; width:150px; padding:0 0 2px; }
+  .hud-title{ font-size:13px; color:var(--muted); }
+  .xpbar{ height:10px; border-radius:99px; background:var(--panel-2); overflow:hidden; margin-top:6px; }
+  .xpfill{ height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,var(--violet),var(--sky),var(--mint)); transition:width .6s cubic-bezier(.2,.8,.2,1); }
+  .xptext{ font-size:12px; color:var(--muted); margin-top:3px; }
+  .hud-stats{ display:flex; gap:14px; font-size:13px; }
+  .stat b{ display:block; font:800 18px 'Bricolage Grotesque'; line-height:1; }
+  .stat span{ color:var(--muted); font-size:11px; }
+  @media (max-width:700px){ .hud-in{ grid-template-columns:auto 1fr; } .hud-stats{ grid-column:1/-1; justify-content:space-between; } .hud-name{ width:110px; } }
+
+  /* Hero */
+  .hero{ padding:56px 0 28px; }
+  .hero h1{ font-size:clamp(38px,7vw,68px); line-height:1.02; font-weight:800; max-width:14ch; }
+  .hero p{ color:var(--muted); font-size:18px; max-width:52ch; margin:16px 0 0; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; min-height:46px; padding:0 20px; border-radius:99px; border:0; font-weight:700; text-decoration:none; transition:transform .15s; }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-main{ background:linear-gradient(135deg,var(--amber),#ff9f5c); color:#2a1a00; box-shadow:0 10px 26px rgba(255,170,80,.25); }
+  .btn-ghost{ background:transparent; border:1px solid var(--line); color:var(--text); }
+  .hero-cta{ display:flex; gap:12px; flex-wrap:wrap; margin-top:26px; }
+
+  /* How it works + daily */
+  .row2{ display:grid; grid-template-columns:1.2fr 1fr; gap:18px; margin-top:26px; }
+  @media (max-width:800px){ .row2{ grid-template-columns:1fr; } }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:22px; }
+  .card h3{ font-size:19px; margin-bottom:10px; }
+  .rules{ list-style:none; margin:0; padding:0; display:grid; gap:8px; color:var(--muted); font-size:14.5px; }
+  .rules b{ color:var(--text); }
+  .daily{ background:linear-gradient(160deg,#2a2160,#171A38 70%); }
+  .daily .big{ font:800 24px 'Bricolage Grotesque'; margin:6px 0 12px; }
+  .pill{ display:inline-block; padding:3px 10px; border-radius:99px; font-size:12px; font-weight:700; background:var(--panel-2); color:var(--amber); }
+
+  /* Sections */
+  section.block{ padding:40px 0 8px; }
+  .sec-head{ display:flex; justify-content:space-between; align-items:end; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+  .sec-head h2{ font-size:clamp(26px,4vw,36px); font-weight:800; }
+  .sec-head p{ color:var(--muted); margin:4px 0 0; }
+
+  /* Quiz */
+  .quiz-q{ font:700 22px 'Bricolage Grotesque'; margin:6px 0 16px; }
+  .opts{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+  .opt{ text-align:left; background:var(--panel-2); border:1px solid var(--line); border-radius:16px; padding:14px 16px; transition:transform .15s,border-color .15s; }
+  .opt:hover{ transform:translateY(-2px); border-color:var(--violet); }
+  .qprog{ font-size:13px; color:var(--muted); }
+  .results{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:12px; }
+
+  /* Filters */
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ background:transparent; border:1px solid var(--line); border-radius:99px; padding:6px 14px; font-size:14px; color:var(--muted); }
+  .chip[aria-pressed="true"]{ background:var(--text); color:var(--bg); border-color:var(--text); font-weight:700; }
+
+  /* Role grid */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(235px,1fr)); gap:14px; }
+  .role{ --c:var(--violet); text-decoration:none; display:flex; flex-direction:column; gap:10px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; position:relative; transition:transform .18s,border-color .18s,box-shadow .18s; }
+  .role:hover{ transform:translateY(-4px); border-color:var(--c); box-shadow:0 14px 34px rgba(0,0,0,.35); }
+  .role-top{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .role-ico{ font-size:30px; }
+  .ring{ --p:0; width:54px; height:54px; border-radius:50%; display:grid; place-items:center; background:conic-gradient(var(--c) calc(var(--p)*1%), var(--panel-2) 0); flex:none; }
+  .ring::before{ content:attr(data-p) '%'; width:44px; height:44px; border-radius:50%; background:var(--panel); display:grid; place-items:center; font:700 12px 'DM Sans'; }
+  .ring.lg{ width:84px; height:84px; } .ring.lg::before{ width:70px; height:70px; font-size:16px; }
+  .role h3{ font-size:18px; }
+  .role p{ margin:0; font-size:13.5px; color:var(--muted); }
+  .role-foot{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted); margin-top:auto; }
+  .rank{ color:var(--c); font-weight:700; }
+
+  /* Achievements */
+  .ach-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+  .ach{ display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:var(--panel); border:1px solid var(--line); opacity:.55; filter:grayscale(.8); }
+  .ach.on{ opacity:1; filter:none; border-color:var(--amber); background:linear-gradient(160deg,#2b2750,var(--panel)); }
+  .ach i{ font-style:normal; font-size:28px; }
+  .ach b{ display:block; font-size:14.5px; } .ach span{ font-size:12.5px; color:var(--muted); }
+
+  /* Role view */
+  .back{ display:inline-flex; margin:26px 0 14px; color:var(--muted); text-decoration:none; }
+  .back:hover{ color:var(--text); }
+  .role-hero{ --c:var(--violet); display:flex; gap:22px; align-items:center; flex-wrap:wrap; padding:26px; border-radius:24px; border:1px solid var(--c); background:linear-gradient(150deg,color-mix(in srgb,var(--c) 22%,var(--panel)),var(--panel) 65%); }
+  .role-hero h1{ font-size:clamp(30px,5vw,46px); font-weight:800; }
+  .role-hero p{ margin:6px 0 0; color:var(--muted); max-width:56ch; }
+  .role-hero .ico{ font-size:46px; }
+  .path{ position:relative; margin:30px 0 10px; padding-left:62px; }
+  .path::before{ content:''; position:absolute; left:23px; top:10px; bottom:10px; width:4px; border-radius:4px; background:repeating-linear-gradient(var(--line) 0 10px, transparent 10px 18px); }
+  .stage{ --c:var(--violet); position:relative; margin-bottom:26px; }
+  .node{ position:absolute; left:-62px; top:4px; width:50px; height:50px; border-radius:50%; display:grid; place-items:center; font:800 19px 'Bricolage Grotesque'; background:var(--panel-2); border:3px solid var(--line); }
+  .stage.clear .node{ background:var(--c); border-color:var(--c); color:#10122a; box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 25%,transparent); }
+  .stage-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; }
+  .stage.clear .stage-card{ border-color:var(--c); }
+  .stage-head{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:baseline; }
+  .stage-head h2{ font-size:24px; }
+  .stage-head span{ font-size:13px; color:var(--muted); }
+  .bar{ height:8px; border-radius:99px; background:var(--panel-2); margin:12px 0 4px; overflow:hidden; }
+  .bar i{ display:block; height:100%; background:var(--c); border-radius:99px; transition:width .5s; }
+  .sub{ font-size:12.5px; color:var(--muted); margin:16px 0 8px; font-weight:700; }
+  .skills{ display:flex; flex-wrap:wrap; gap:8px; }
+  .skill{ display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:99px; background:var(--panel-2); border:1px solid var(--line); font-size:14.5px; transition:transform .15s, background .2s, border-color .2s; }
+  .skill:hover{ transform:translateY(-2px); border-color:var(--c); }
+  .skill .tick{ width:18px; height:18px; border-radius:50%; border:2px solid var(--muted); display:grid; place-items:center; font-size:11px; color:transparent; }
+  .skill[aria-pressed="true"]{ background:color-mix(in srgb,var(--c) 24%,var(--panel-2)); border-color:var(--c); }
+  .skill[aria-pressed="true"] .tick{ background:var(--c); border-color:var(--c); color:#10122a; font-weight:800; }
+  .bosses{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px; }
+  .boss{ display:flex; flex-direction:column; gap:8px; padding:14px; border-radius:16px; background:var(--panel-2); border:1px solid var(--line); }
+  .boss.won{ border-color:var(--amber); background:linear-gradient(160deg,#33295a,var(--panel-2)); }
+  .boss-top{ display:flex; gap:8px; align-items:center; font-size:12px; color:var(--muted); }
+  .tier{ padding:2px 9px; border-radius:99px; font-weight:800; font-size:11px; color:#10122a; }
+  .tier.F{ background:var(--mint); } .tier.A{ background:var(--sky); } .tier.P{ background:var(--amber); }
+  .boss h4{ margin:0; font:700 15.5px 'DM Sans'; line-height:1.3; }
+  .boss-act{ display:flex; gap:8px; margin-top:auto; align-items:center; flex-wrap:wrap; }
+  .win{ border:1px solid var(--line); background:transparent; border-radius:99px; padding:6px 14px; font-size:13.5px; font-weight:700; }
+  .boss.won .win{ background:var(--amber); color:#2a1a00; border-color:var(--amber); }
+  .link{ font-size:13px; color:var(--muted); }
+  .link:hover{ color:var(--text); }
+
+  footer{ margin-top:60px; padding:28px 0 60px; border-top:1px solid var(--line); color:var(--muted); font-size:13.5px; }
+  footer .wrap{ display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .tiny{ background:none; border:1px solid var(--line); border-radius:99px; padding:6px 14px; color:var(--muted); font-size:13px; }
+
+  /* FX */
+  .toasts{ position:fixed; bottom:18px; left:50%; transform:translateX(-50%); z-index:60; display:grid; gap:8px; width:min(92vw,420px); pointer-events:none; }
+  .toast{ background:var(--panel-2); border:1px solid var(--amber); border-radius:16px; padding:12px 16px; box-shadow:0 14px 30px rgba(0,0,0,.45); animation:tin .35s ease-out; font-size:14.5px; }
+  .toast.out{ opacity:0; transform:translateY(10px); transition:all .35s; }
+  @keyframes tin{ from{ opacity:0; transform:translateY(14px) scale(.96);} }
+  .levelup{ position:fixed; inset:0; z-index:70; display:grid; place-items:center; pointer-events:none; }
+  .levelup div{ text-align:center; padding:26px 40px; border-radius:28px; background:rgba(14,16,36,.92); border:2px solid var(--amber); box-shadow:0 0 60px rgba(255,198,92,.35); animation:lvl 2.4s ease-out forwards; }
+  .levelup small{ color:var(--amber); font-weight:700; } .levelup h2{ font-size:44px; font-weight:800; }
+  @keyframes lvl{ 0%{ opacity:0; transform:scale(.6);} 12%{ opacity:1; transform:scale(1.06);} 20%{ transform:scale(1);} 80%{ opacity:1;} 100%{ opacity:0; transform:scale(1.04);} }
+  .fx{ position:fixed; inset:0; pointer-events:none; z-index:65; overflow:hidden; }
+  .conf{ position:absolute; top:-20px; width:9px; height:16px; border-radius:3px; animation:fall 1500ms ease-in forwards; }
+  @keyframes fall{ to{ transform:translate3d(var(--x),105vh,0) rotate(var(--r)); opacity:.2; } }
+  .star{ position:absolute; width:12px; height:12px; background:var(--amber); clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%); animation:pop 700ms ease-out forwards; }
+  @keyframes pop{ from{ opacity:1; transform:translate(0,0) scale(1);} to{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(.2) rotate(120deg);} }
+  @media (prefers-reduced-motion:reduce){ *,*::before,*::after{ animation:none!important; transition:none!important; } html{ scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+<header class="hud">
+  <div class="hud-in">
+    <div class="avatar" id="avatar" aria-hidden="true">🧑‍💻</div>
+    <div>
+      <label class="sr" for="pname">Player name</label>
+      <input class="hud-name" id="pname" maxlength="20" value="Player One" autocomplete="off">
+      <span class="hud-title" id="hudTitle">Level 1 · Newbie</span>
+      <div class="xpbar" role="progressbar" aria-label="Experience to next level" aria-valuemin="0" aria-valuemax="100" id="xpWrap"><div class="xpfill" id="xpFill"></div></div>
+      <div class="xptext" id="xpText">0 XP</div>
+    </div>
+    <div class="hud-stats">
+      <div class="stat"><b id="stSkills">0</b><span>skills</span></div>
+      <div class="stat"><b id="stCerts">0</b><span>exams won</span></div>
+      <div class="stat"><b id="stStreak">1</b><span>day streak</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer>
+  <div class="wrap">
+    <span>Certification programs, names and exam codes change often. Always confirm details on the vendor's official site. This is an independent guide and is not affiliated with any certification provider.</span>
+    <span>Progress is saved in this browser only. <button class="tiny" data-act="reset">Reset progress</button></span>
+  </div>
+</footer>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="fx" id="fx" aria-hidden="true"></div>
+
+<script>
+/* ============ DATA ============ */
+const VENDORS = {
+  'Python Institute':'https://pythoninstitute.org/',
+  'AWS':'https://aws.amazon.com/certification/',
+  'Microsoft':'https://learn.microsoft.com/credentials/browse/',
+  'Google Cloud':'https://cloud.google.com/learn/certification',
+  'Google':'https://grow.google/certificates/',
+  'CNCF':'https://www.cncf.io/training/certification/',
+  'Linux Foundation':'https://training.linuxfoundation.org/certification-catalog/',
+  'HashiCorp':'https://www.hashicorp.com/certification',
+  'CompTIA':'https://www.comptia.org/certifications',
+  'ISC2':'https://www.isc2.org/certifications',
+  'EC-Council':'https://www.eccouncil.org/train-certify/',
+  'OffSec':'https://www.offsec.com/courses-and-certifications/',
+  'ISACA':'https://www.isaca.org/credentialing',
+  'Tableau':'https://www.tableau.com/learn/certification',
+  'Databricks':'https://www.databricks.com/learn/certification',
+  'Snowflake':'https://learn.snowflake.com/en/certifications/',
+  'INFORMS':'https://www.certifiedanalytics.org/',
+  'NVIDIA':'https://www.nvidia.com/en-us/learn/certification/',
+  'Cisco':'https://www.cisco.com/site/us/en/learn/training-certifications/index.html',
+  'Juniper':'https://www.juniper.net/us/en/training/certification.html',
+  'ISTQB':'https://www.istqb.org/certifications',
+  'Oracle':'https://education.oracle.com/',
+  'MongoDB':'https://learn.mongodb.com/pages/certification',
+  'PeopleCert':'https://www.peoplecert.org/',
+  'PMI':'https://www.pmi.org/certifications',
+  'Scrum.org':'https://www.scrum.org/professional-scrum-certifications',
+  'Scrum Alliance':'https://www.scrumalliance.org/get-certified',
+  'Scaled Agile':'https://scaledagile.com/training/',
+  'The Open Group':'https://www.opengroup.org/certifications/'
+};
+const TIERS = { F:{xp:50, label:'Foundation'}, A:{xp:100, label:'Associate'}, P:{xp:200, label:'Professional'} };
+const STAGE_META = [
+  { n:'Rookie', d:'Learn the basics' },
+  { n:'Pro', d:'Ship real work' },
+  { n:'Expert', d:'Lead and specialise' }
+];
+const CATS = { build:{name:'Build', c:'#8B7BFF'}, ops:{name:'Cloud & Ops', c:'#44C8FF'}, sec:{name:'Security', c:'#FF6F91'}, data:{name:'Data & AI', c:'#4FE3B5'}, deliver:{name:'Delivery', c:'#FFC65C'} };
+
+// cert: [name, vendor, tier, code]
+const ROLES = [
+ { id:'dev', name:'Software Developer', icon:'💻', cat:'build', tag:'Design, build and ship the applications people use.',
+   stages:[
+    { skills:['Programming fundamentals','Git','Data structures','SQL'], certs:[['PCEP: Certified Entry-Level Python Programmer','Python Institute','F','PCEP']] },
+    { skills:['REST APIs','Testing','Design patterns','Docker'], certs:[['PCAP: Certified Associate in Python Programming','Python Institute','A','PCAP'],['AWS Certified Developer – Associate','AWS','A','DVA-C02'],['Azure Developer Associate','Microsoft','A','AZ-204']] },
+    { skills:['System design','CI/CD','Application security','Cloud-native design'], certs:[['Certified Kubernetes Application Developer','CNCF','A','CKAD'],['Oracle Certified Professional: Java SE 17 Developer','Oracle','P','1Z0-829']] }
+   ]},
+ { id:'qa', name:'QA / Test Engineer', icon:'🧪', cat:'build', tag:'Break things on purpose so customers never find the bugs.',
+   stages:[
+    { skills:['Testing fundamentals','Bug reporting','SQL','Git'], certs:[['ISTQB Certified Tester Foundation Level','ISTQB','F','CTFL']] },
+    { skills:['Test automation','API testing','CI/CD','Programming fundamentals'], certs:[['ISTQB Test Automation Engineering','ISTQB','A','CT-TAE'],['ISTQB Agile Tester','ISTQB','A','CT-AT']] },
+    { skills:['Performance testing','Test strategy','Security testing','Quality leadership'], certs:[['ISTQB Advanced Level Test Manager','ISTQB','P','CTAL-TM'],['ISTQB Test Automation Strategy','ISTQB','P','CT-TAS']] }
+   ]},
+ { id:'cloud', name:'Cloud Engineer', icon:'☁️', cat:'ops', tag:'Run reliable, secure and affordable infrastructure in the cloud.',
+   stages:[
+    { skills:['Linux','Networking basics','Cloud concepts','Scripting'], certs:[['AWS Certified Cloud Practitioner','AWS','F','CLF-C02'],['Azure Fundamentals','Microsoft','F','AZ-900'],['Google Cloud Digital Leader','Google Cloud','F','']] },
+    { skills:['Virtual networks','Identity & access (IAM)','Compute & storage','Monitoring'], certs:[['AWS Solutions Architect – Associate','AWS','A','SAA-C03'],['Azure Administrator Associate','Microsoft','A','AZ-104'],['Google Associate Cloud Engineer','Google Cloud','A','']] },
+    { skills:['Infrastructure as code','Cost optimization','Multi-account governance','Serverless'], certs:[['HashiCorp Terraform Associate','HashiCorp','A',''],['AWS Solutions Architect – Professional','AWS','P','SAP-C02'],['Azure Solutions Architect Expert','Microsoft','P','AZ-305'],['Google Professional Cloud Architect','Google Cloud','P','']] }
+   ]},
+ { id:'devops', name:'DevOps / SRE', icon:'♾️', cat:'ops', tag:'Automate delivery and keep production healthy at 3 a.m.',
+   stages:[
+    { skills:['Linux','Git','Scripting','Networking basics'], certs:[['Linux Foundation Certified IT Associate','Linux Foundation','F','LFCA']] },
+    { skills:['CI/CD','Docker','Kubernetes','Infrastructure as code'], certs:[['Certified Kubernetes Administrator','CNCF','A','CKA'],['HashiCorp Terraform Associate','HashiCorp','A',''],['Linux Foundation Certified System Administrator','Linux Foundation','A','LFCS']] },
+    { skills:['Observability','Incident response','GitOps','Site reliability'], certs:[['AWS DevOps Engineer – Professional','AWS','P','DOP-C02'],['Azure DevOps Engineer Expert','Microsoft','P','AZ-400'],['Certified Kubernetes Security Specialist','CNCF','P','CKS']] }
+   ]},
+ { id:'net', name:'Network Engineer', icon:'🛰️', cat:'ops', tag:'Design and defend the networks everything else rides on.',
+   stages:[
+    { skills:['Networking basics','TCP/IP & subnetting','Switching & routing','Linux'], certs:[['CompTIA Network+','CompTIA','F','N10-009'],['Juniper Networks Certified Associate: Junos','Juniper','F','JNCIA-Junos']] },
+    { skills:['VLANs & spanning tree','Routing protocols','Wireless & VPN','Network automation'], certs:[['Cisco Certified Network Associate','Cisco','A','CCNA 200-301'],['Cisco Certified DevNet Associate','Cisco','A','DEVASC']] },
+    { skills:['SD-WAN','Network security','Cloud networking','Capacity planning'], certs:[['Cisco Certified Network Professional: Enterprise','Cisco','P','CCNP'],['Cisco Certified Internetwork Expert: Enterprise Infrastructure','Cisco','P','CCIE'],['AWS Certified Advanced Networking – Specialty','AWS','P','ANS-C01']] }
+   ]},
+ { id:'sup', name:'IT Support / SysAdmin', icon:'🛠️', cat:'ops', tag:'The front line: keep people and machines working.',
+   stages:[
+    { skills:['Hardware basics','Operating systems','Networking basics','Customer service'], certs:[['CompTIA A+','CompTIA','F','220-1101 / 220-1102'],['Google IT Support Professional Certificate','Google','F',''],['ITIL 4 Foundation','PeopleCert','F','']] },
+    { skills:['Active Directory & identity','Scripting','Endpoint management','Cloud concepts'], certs:[['Microsoft 365 Endpoint Administrator','Microsoft','A','MD-102'],['CompTIA Network+','CompTIA','F','N10-009'],['CompTIA Linux+','CompTIA','A','XK0-005']] },
+    { skills:['Server administration','Virtualization','Automation','Security hardening'], certs:[['Windows Server Hybrid Administrator Associate','Microsoft','A','AZ-800'],['Linux Foundation Certified System Administrator','Linux Foundation','A','LFCS']] }
+   ]},
+ { id:'arch', name:'Solutions Architect', icon:'🏛️', cat:'ops', tag:'Turn business problems into well-shaped technical designs.',
+   stages:[
+    { skills:['Cloud concepts','Networking basics','SQL','Security fundamentals'], certs:[['AWS Certified Cloud Practitioner','AWS','F','CLF-C02'],['Azure Fundamentals','Microsoft','F','AZ-900']] },
+    { skills:['Architecture patterns','Virtual networks','Identity & access (IAM)','Cost optimization'], certs:[['AWS Solutions Architect – Associate','AWS','A','SAA-C03'],['Azure Administrator Associate','Microsoft','A','AZ-104']] },
+    { skills:['System design','Enterprise architecture','Multi-account governance','Technical leadership'], certs:[['AWS Solutions Architect – Professional','AWS','P','SAP-C02'],['Azure Solutions Architect Expert','Microsoft','P','AZ-305'],['Google Professional Cloud Architect','Google Cloud','P',''],['TOGAF Enterprise Architecture Certification','The Open Group','A','']] }
+   ]},
+ { id:'sec', name:'Cybersecurity Analyst', icon:'🛡️', cat:'sec', tag:'Detect, investigate and shut down threats.',
+   stages:[
+    { skills:['Networking basics','Linux','Security fundamentals','Cryptography basics'], certs:[['CompTIA Security+','CompTIA','F','SY0-701'],['Microsoft Security, Compliance, and Identity Fundamentals','Microsoft','F','SC-900'],['Certified in Cybersecurity','ISC2','F','CC']] },
+    { skills:['Threat detection','SIEM & logging','Vulnerability management','Incident response'], certs:[['CompTIA CySA+','CompTIA','A','CS0-003'],['Security Operations Analyst Associate','Microsoft','A','SC-200'],['Certified Ethical Hacker','EC-Council','A','CEH']] },
+    { skills:['Penetration testing','Cloud security','Security architecture','Governance & risk'], certs:[['Certified Information Systems Security Professional','ISC2','P','CISSP'],['Offensive Security Certified Professional','OffSec','P','OSCP'],['Certified Information Security Manager','ISACA','P','CISM'],['CompTIA PenTest+','CompTIA','A','PT0-003']] }
+   ]},
+ { id:'da', name:'Data Analyst', icon:'📊', cat:'data', tag:'Turn raw numbers into answers people can act on.',
+   stages:[
+    { skills:['Excel','SQL','Statistics','Data visualization'], certs:[['Google Data Analytics Professional Certificate','Google','F',''],['Azure Data Fundamentals','Microsoft','F','DP-900']] },
+    { skills:['BI dashboards','Python','Data cleaning','Storytelling with data'], certs:[['Power BI Data Analyst Associate','Microsoft','A','PL-300'],['Tableau Certified Data Analyst','Tableau','A',''],['Databricks Certified Data Analyst Associate','Databricks','A','']] },
+    { skills:['A/B testing','Predictive modeling','Data modeling','Stakeholder communication'], certs:[['Fabric Analytics Engineer Associate','Microsoft','A','DP-600'],['Certified Analytics Professional','INFORMS','P','CAP']] }
+   ]},
+ { id:'de', name:'Data Engineer', icon:'🚰', cat:'data', tag:'Build the pipelines that make data trustworthy and fast.',
+   stages:[
+    { skills:['Python','SQL','Linux','Data modeling'], certs:[['Azure Data Fundamentals','Microsoft','F','DP-900']] },
+    { skills:['ETL/ELT pipelines','Data warehousing','Apache Spark','Workflow orchestration'], certs:[['Databricks Certified Data Engineer Associate','Databricks','A',''],['AWS Certified Data Engineer – Associate','AWS','A','DEA-C01'],['SnowPro Core','Snowflake','A',''],['Fabric Data Engineer Associate','Microsoft','A','DP-700']] },
+    { skills:['Streaming data','Data governance','Lakehouse architecture','Cost optimization'], certs:[['Google Professional Data Engineer','Google Cloud','P',''],['Databricks Certified Data Engineer Professional','Databricks','P','']] }
+   ]},
+ { id:'ml', name:'ML / AI Engineer', icon:'🧠', cat:'data', tag:'Train, ship and monitor models and LLM-powered products.',
+   stages:[
+    { skills:['Python','Statistics','Linear algebra','Machine learning fundamentals'], certs:[['AWS Certified AI Practitioner','AWS','F','AIF-C01'],['Azure AI Fundamentals','Microsoft','F','AI-900']] },
+    { skills:['Deep learning','Feature engineering','Model evaluation','Data cleaning'], certs:[['AWS Certified Machine Learning Engineer – Associate','AWS','A','MLA-C01'],['Azure Data Scientist Associate','Microsoft','A','DP-100'],['NVIDIA-Certified Associate: Generative AI LLMs','NVIDIA','A','']] },
+    { skills:['MLOps','LLM applications','Model deployment','Responsible AI'], certs:[['Google Professional Machine Learning Engineer','Google Cloud','P',''],['Databricks Certified Machine Learning Professional','Databricks','P','']] }
+   ]},
+ { id:'dba', name:'Database Administrator', icon:'🗄️', cat:'data', tag:'Keep data safe, quick and always available.',
+   stages:[
+    { skills:['SQL','Relational design','Linux','Backup & recovery'], certs:[['Azure Data Fundamentals','Microsoft','F','DP-900'],['Oracle Database SQL Certified Associate','Oracle','A','1Z0-071']] },
+    { skills:['Performance tuning','Indexing','High availability','Scripting'], certs:[['Azure Database Administrator Associate','Microsoft','A','DP-300'],['MongoDB Associate Database Administrator','MongoDB','A','']] },
+    { skills:['Replication & clustering','Cloud databases','Security & compliance','Capacity planning'], certs:[['Oracle Certified Professional: Database Administration','Oracle','P','OCP']] }
+   ]},
+ { id:'pm', name:'Project / Delivery Manager', icon:'🧭', cat:'deliver', tag:'Keep teams aligned, unblocked and shipping on time.',
+   stages:[
+    { skills:['Project fundamentals','Agile & Scrum','Communication','Risk management'], certs:[['Certified Associate in Project Management','PMI','F','CAPM'],['Professional Scrum Master I','Scrum.org','A','PSM I'],['Certified ScrumMaster','Scrum Alliance','A','CSM']] },
+    { skills:['Planning & estimation','Stakeholder management','Budgeting','Roadmapping'], certs:[['PMI Agile Certified Practitioner','PMI','A','PMI-ACP'],['Professional Scrum Product Owner I','Scrum.org','A','PSPO I'],['ITIL 4 Foundation','PeopleCert','F','']] },
+    { skills:['Program management','Portfolio strategy','Change management','Leadership'], certs:[['Project Management Professional','PMI','P','PMP'],['Leading SAFe','Scaled Agile','A','SAFe Agilist'],['Program Management Professional','PMI','P','PgMP']] }
+   ]}
+];
+
+const QUIZ = [
+ { q:'Pick your ideal project', o:[
+   ['Ship a feature people use today',{dev:3,qa:1}],
+   ['Keep a huge system up through the chaos',{devops:3,cloud:2,net:1,sup:1}],
+   ['Find out why the numbers moved',{da:3,de:1,ml:1}],
+   ['Break into a system (legally) and fix it',{sec:3}] ]},
+ { q:'Your superpower is…', o:[
+   ['Spotting the one edge case nobody tested',{qa:3,sec:1,dev:1}],
+   ['Designing how all the pieces fit together',{arch:3,cloud:1,dba:1}],
+   ['Getting a team unblocked and moving',{pm:3,sup:1}],
+   ['Teaching machines to find patterns',{ml:3,de:1,da:1}] ]},
+ { q:'Which tool do you reach for first?', o:[
+   ['A code editor',{dev:2,qa:1,devops:1,ml:1}],
+   ['A terminal and a cloud console',{cloud:3,devops:2,arch:1,net:1}],
+   ['A dashboard or spreadsheet',{da:3,pm:1,dba:1}],
+   ['A packet capture or log viewer',{net:3,sec:2,sup:1}] ]},
+ { q:'What energises you most?', o:[
+   ["Fixing someone's problem right now",{sup:3,net:1}],
+   ['Making data pipelines fast and reliable',{de:3,dba:2,devops:1}],
+   ['Planning a roadmap and hitting deadlines',{pm:3,arch:1}],
+   ['Building something from nothing',{dev:3,ml:1,arch:1}] ]},
+ { q:'How do you like to learn?', o:[
+   ['Deep theory first, then apply it',{ml:2,sec:1,arch:1,de:1}],
+   ['Hands-on labs and breaking things',{sec:2,devops:2,net:2,cloud:1}],
+   ['Real data and real questions',{da:2,de:1,dba:2,ml:1}],
+   ['Working with people on real projects',{pm:2,qa:1,dev:1,sup:1}] ]}
+];
+
+const LEVEL_TITLES = ['Newbie','Apprentice','Builder','Specialist','Veteran','Architect','Principal','Legend'];
+const RANKS = ['Recruit','Rookie','Pro','Expert'];
+
+/* ============ INDEXES ============ */
+const CERTS = {}, SKILL_ROLE = {};
+ROLES.forEach(r => {
+  r.stages.forEach(st => {
+    st.certs.forEach(c => { CERTS[c[0]] = { name:c[0], vendor:c[1], tier:c[2], code:c[3] }; });
+    st.skills.forEach(s => { (SKILL_ROLE[s] = SKILL_ROLE[s] || []).push(r.id); });
+  });
+});
+const ALL_SKILLS = Object.keys(SKILL_ROLE);
+
+/* ============ STATE ============ */
+const KEY = 'itCareerQuest.v1';
+const DEFAULTS = { name:'Player One', skills:{}, certs:{}, bonus:0, streak:1, lastVisit:'', daily:{date:'',key:null,done:false}, visited:{}, quizDone:false, ach:{}, lastLevel:1 };
+let S = load();
+let quiz = { i:0, scores:{}, done:false, open:false };
+let filter = 'all';
+
+function load(){
+  try { const r = JSON.parse(localStorage.getItem(KEY)); return Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), r || {}); }
+  catch(e){ return JSON.parse(JSON.stringify(DEFAULTS)); }
+}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function dstr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+/* ============ DERIVED ============ */
+function xpTotal(){
+  let xp = S.bonus;
+  xp += Object.keys(S.skills).length * 10;
+  Object.keys(S.certs).forEach(k => { if (CERTS[k]) xp += TIERS[CERTS[k].tier].xp; });
+  return xp;
+}
+function levelOf(xp){ const lvl = 1 + Math.floor(Math.sqrt(xp/40)); return { lvl, from:40*Math.pow(lvl-1,2), to:40*Math.pow(lvl,2) }; }
+function stageStats(st){
+  const sd = st.skills.filter(s => S.skills[s]).length;
+  const cd = st.certs.filter(c => S.certs[c[0]]).length;
+  const need = st.skills.length + (st.certs.length ? 1 : 0);
+  const have = sd + (cd ? 1 : 0);
+  return { sd, cd, need, have, clear: have === need };
+}
+function roleStats(r){
+  let need=0, have=0, cleared=0, certsWon=0, certsAll=0;
+  r.stages.forEach(st => { const s = stageStats(st); need += s.need; have += s.have; if (s.clear) cleared++; certsWon += s.cd; certsAll += st.certs.length; });
+  return { pct: Math.round(have/need*100), cleared, certsWon, certsAll };
+}
+
+/* ============ ACHIEVEMENTS ============ */
+const ACH = [
+ { id:'first',  i:'🌱', n:'First Steps',      d:'Learn your first skill',          t:()=>Object.keys(S.skills).length>=1 },
+ { id:'s10',    i:'🧽', n:'Skill Sponge',     d:'Learn 10 skills',                 t:()=>Object.keys(S.skills).length>=10 },
+ { id:'s30',    i:'📚', n:'Walking Library',  d:'Learn 30 skills',                 t:()=>Object.keys(S.skills).length>=30 },
+ { id:'boss',   i:'⚔️', n:'Boss Slayer',      d:'Defeat your first exam',          t:()=>Object.keys(S.certs).length>=1 },
+ { id:'boss5',  i:'🏆', n:'Exam Collector',   d:'Defeat 5 exams',                  t:()=>Object.keys(S.certs).length>=5 },
+ { id:'pro',    i:'💎', n:'Pro Tier',         d:'Win a Professional-tier exam',    t:()=>Object.keys(S.certs).some(k=>CERTS[k]&&CERTS[k].tier==='P') },
+ { id:'clear',  i:'🚩', n:'Stage Cleared',    d:'Clear any stage',                 t:()=>ROLES.some(r=>r.stages.some(st=>stageStats(st).clear)) },
+ { id:'master', i:'👑', n:'Role Master',      d:'Finish every stage of a role',    t:()=>ROLES.some(r=>roleStats(r).pct===100) },
+ { id:'multi',  i:'🎭', n:'Multiclass',       d:'Reach 25% in three roles',        t:()=>ROLES.filter(r=>roleStats(r).pct>=25).length>=3 },
+ { id:'scout',  i:'🔭', n:'Scout',            d:'Explore 5 role pathways',         t:()=>Object.keys(S.visited).length>=5 },
+ { id:'quiz',   i:'🔮', n:'Found Your Class', d:'Finish the role finder',          t:()=>S.quizDone },
+ { id:'streak', i:'🔥', n:'On a Roll',        d:'Visit 3 days in a row',           t:()=>S.streak>=3 },
+ { id:'lvl5',   i:'🚀', n:'Level 5',          d:'Reach level 5',                   t:()=>levelOf(xpTotal()).lvl>=5 }
+];
+
+/* ============ FX ============ */
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function confetti(n){
+  if (reduce) return;
+  const fx = document.getElementById('fx'), cols = ['#FFC65C','#8B7BFF','#4FE3B5','#FF6F91','#44C8FF'];
+  for (let i=0;i<n;i++){
+    const p = document.createElement('span'); p.className='conf';
+    p.style.left = Math.random()*100+'vw'; p.style.background = cols[i%cols.length];
+    p.style.setProperty('--x',(Math.random()*240-120)+'px'); p.style.setProperty('--r',(Math.random()*720-360)+'deg');
+    p.style.animationDelay = Math.random()*150+'ms';
+    p.addEventListener('animationend',()=>p.remove()); fx.appendChild(p);
+  }
+}
+function sparks(x,y){
+  if (reduce) return;
+  const fx = document.getElementById('fx');
+  for (let i=0;i<7;i++){
+    const s = document.createElement('span'); s.className='star';
+    s.style.left = x+'px'; s.style.top = y+'px';
+    s.style.setProperty('--dx',(Math.random()*90-45)+'px'); s.style.setProperty('--dy',(Math.random()*-70-10)+'px');
+    s.style.background = ['#FFC65C','#4FE3B5','#FF6F91','#44C8FF'][i%4];
+    s.addEventListener('animationend',()=>s.remove()); fx.appendChild(s);
+  }
+}
+function toast(html){
+  const box = document.getElementById('toasts'), t = document.createElement('div');
+  t.className='toast'; t.innerHTML = html; box.appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),400); }, 3200);
+}
+function levelBanner(lvl){
+  const d = document.createElement('div'); d.className='levelup';
+  d.innerHTML = '<div><small>LEVEL UP</small><h2>Level '+lvl+'</h2><span>'+LEVEL_TITLES[Math.min(lvl-1,LEVEL_TITLES.length-1)]+'</span></div>';
+  document.body.appendChild(d); setTimeout(()=>d.remove(),2500); confetti(60);
+}
+
+/* ============ HUD ============ */
+function renderHud(){
+  const xp = xpTotal(), L = levelOf(xp);
+  const pct = Math.round((xp-L.from)/(L.to-L.from)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpWrap').setAttribute('aria-valuenow', pct);
+  document.getElementById('hudTitle').textContent = 'Level '+L.lvl+' · '+LEVEL_TITLES[Math.min(L.lvl-1,LEVEL_TITLES.length-1)];
+  document.getElementById('xpText').textContent = xp+' XP · '+(L.to-xp)+' to level '+(L.lvl+1);
+  document.getElementById('stSkills').textContent = Object.keys(S.skills).length;
+  document.getElementById('stCerts').textContent = Object.keys(S.certs).length;
+  document.getElementById('stStreak').textContent = S.streak;
+  document.getElementById('pname').value = S.name;
+}
+
+/* ============ VIEWS ============ */
+function dailyPick(){
+  const today = dstr(new Date());
+  if (S.daily.date !== today){
+    const pool = ALL_SKILLS.filter(s => !S.skills[s]);
+    let h = 0; for (const ch of today) h = (h*31 + ch.charCodeAt(0)) >>> 0;
+    S.daily = { date:today, key: pool.length ? pool[h % pool.length] : null, done:false };
+    save();
+  }
+  return S.daily;
+}
+function roleCard(r, extra){
+  const st = roleStats(r), c = CATS[r.cat].c;
+  return '<a class="role" style="--c:'+c+'" href="#/role/'+r.id+'">'+
+    '<div class="role-top"><span class="role-ico" aria-hidden="true">'+r.icon+'</span><span class="ring" style="--p:'+st.pct+'" data-p="'+st.pct+'"></span></div>'+
+    '<h3>'+r.name+'</h3><p>'+r.tag+'</p>'+(extra?'<p><b style="color:var(--amber)">'+extra+'</b></p>':'')+
+    '<div class="role-foot"><span class="rank">'+RANKS[st.cleared]+'</span><span>'+st.certsWon+'/'+st.certsAll+' exams</span></div></a>';
+}
+function renderHome(){
+  const d = dailyPick();
+  const dailyHtml = d.key
+    ? '<span class="pill">Daily quest · +15 bonus XP</span><div class="big">Learn: '+esc(d.key)+'</div>'+
+      (S.skills[d.key] ? '<p style="margin:0;color:var(--mint)">Done'+(d.done?' — bonus claimed!':'.')+'</p>'
+        : '<button class="btn btn-main" data-skill="'+esc(d.key)+'">Mark as learned</button> <a class="link" href="#/role/'+SKILL_ROLE[d.key][0]+'">see where it fits</a>')
+    : '<span class="pill">Daily quest</span><div class="big">Every skill learned!</div><p style="margin:0;color:var(--muted)">You cleared the whole map.</p>';
+
+  let quizHtml;
+  if (quiz.done){
+    const top = Object.entries(quiz.scores).sort((a,b)=>b[1]-a[1]).slice(0,3).map(e=>ROLES.find(r=>r.id===e[0]));
+    quizHtml = '<div class="card"><h3>Your top classes</h3><p style="color:var(--muted);margin:0">Based on your answers, start with one of these.</p><div class="results">'+
+      top.map((r,i)=>roleCard(r, i===0?'Best match':'')).join('')+'</div><p><button class="btn btn-ghost" data-act="quizRestart">Retake quiz</button></p></div>';
+  } else if (quiz.open){
+    const q = QUIZ[quiz.i];
+    quizHtml = '<div class="card"><div class="qprog">Question '+(quiz.i+1)+' of '+QUIZ.length+'</div><div class="quiz-q">'+q.q+'</div><div class="opts">'+
+      q.o.map((o,i)=>'<button class="opt" data-qopt="'+i+'">'+o[0]+'</button>').join('')+'</div></div>';
+  } else {
+    quizHtml = '<div class="card"><h3>Not sure where to start?</h3><p style="color:var(--muted);margin:0 0 14px">Answer 5 quick questions and we will suggest your top three roles.</p><button class="btn btn-main" data-act="quizStart">Find my class</button></div>';
+  }
+
+  const chips = ['all'].concat(Object.keys(CATS)).map(k =>
+    '<button class="chip" data-filter="'+k+'" aria-pressed="'+(filter===k)+'">'+(k==='all'?'All roles':CATS[k].name)+'</button>').join('');
+  const roles = ROLES.filter(r => filter==='all' || r.cat===filter).map(r=>roleCard(r)).join('');
+  const ach = ACH.map(a => '<div class="ach'+(S.ach[a.id]?' on':'')+'"><i>'+a.i+'</i><div><b>'+a.n+'</b><span>'+a.d+'</span></div></div>').join('');
+
+  document.getElementById('app').innerHTML =
+   '<section class="hero"><h1>Level up your IT career.</h1>'+
+   '<p>Pick a role, learn the skills, and defeat the certification exams that prove them. Every win earns XP.</p>'+
+   '<div class="hero-cta"><a class="btn btn-main" href="#roles">Choose a role</a><button class="btn btn-ghost" data-act="quizStart">Take the role quiz</button></div>'+
+   '<div class="row2"><div class="card"><h3>How to play</h3><ul class="rules">'+
+     '<li><b>Skills +10 XP.</b> Tick a skill when you can use it confidently.</li>'+
+     '<li><b>Exams +50 / +100 / +200 XP.</b> Foundation, Associate and Professional tiers.</li>'+
+     '<li><b>Clear a stage</b> by learning every skill and winning one exam in it.</li>'+
+     '<li><b>Skills and exams carry over.</b> Learn SQL once and it counts for every role.</li></ul></div>'+
+   '<div class="card daily">'+dailyHtml+'</div></div></section>'+
+   '<section class="block" id="quiz"><div class="sec-head"><div><h2>Role finder</h2></div></div>'+quizHtml+'</section>'+
+   '<section class="block" id="roles"><div class="sec-head"><div><h2>Pick a role</h2><p>'+ROLES.length+' paths. Open one to see the full skill and exam route.</p></div><div class="chips">'+chips+'</div></div><div class="grid">'+roles+'</div></section>'+
+   '<section class="block"><div class="sec-head"><div><h2>Achievements</h2><p>'+Object.keys(S.ach).length+' of '+ACH.length+' unlocked</p></div></div><div class="ach-grid">'+ach+'</div></section>';
+}
+function renderRole(id){
+  const r = ROLES.find(x => x.id===id);
+  if (!r){ location.hash = '#/'; return; }
+  if (!S.visited[id]){ S.visited[id] = 1; save(); checkAch(); }
+  const c = CATS[r.cat].c, rs = roleStats(r);
+  const stages = r.stages.map((st,i) => {
+    const ss = stageStats(st), pct = Math.round(ss.have/ss.need*100);
+    const skills = st.skills.map(s => '<button class="skill" data-skill="'+esc(s)+'" data-k="s:'+esc(s)+'" aria-pressed="'+!!S.skills[s]+'"><span class="tick">✓</span>'+s+'</button>').join('');
+    const bosses = st.certs.map(ce => {
+      const info = CERTS[ce[0]], won = !!S.certs[ce[0]], t = TIERS[info.tier];
+      return '<div class="boss'+(won?' won':'')+'"><div class="boss-top"><span class="tier '+info.tier+'">'+t.label+'</span><span>'+info.vendor+(info.code?' · '+info.code:'')+'</span></div>'+
+        '<h4>'+info.name+'</h4><div class="boss-act"><button class="win" data-cert="'+esc(info.name)+'" data-k="c:'+esc(info.name)+'" aria-pressed="'+won+'">'+(won?'Defeated ✓':'Mark defeated · +'+t.xp+' XP')+'</button>'+
+        '<a class="link" href="'+VENDORS[info.vendor]+'" target="_blank" rel="noopener">Official site ↗</a></div></div>';
+    }).join('');
+    return '<div class="stage'+(ss.clear?' clear':'')+'" style="--c:'+c+'"><div class="node">'+(ss.clear?'✓':(i+1))+'</div><div class="stage-card">'+
+      '<div class="stage-head"><h2>'+STAGE_META[i].n+'</h2><span>'+STAGE_META[i].d+'</span></div>'+
+      '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'" aria-label="'+STAGE_META[i].n+' progress"><i style="width:'+pct+'%"></i></div>'+
+      '<div class="sub">'+(ss.clear?'Stage cleared!':'Clear it: learn all '+st.skills.length+' skills and win at least 1 exam')+'</div>'+
+      '<div class="sub" style="margin-top:6px">SKILLS</div><div class="skills">'+skills+'</div>'+
+      '<div class="sub">EXAM BOSSES · pick the vendor that fits your job</div><div class="bosses">'+bosses+'</div></div></div>';
+  }).join('');
+  document.getElementById('app').innerHTML =
+    '<a class="back" href="#/">← All roles</a>'+
+    '<div class="role-hero" style="--c:'+c+'"><span class="ico" aria-hidden="true">'+r.icon+'</span><div style="flex:1;min-width:220px"><h1>'+r.name+'</h1><p>'+r.tag+'</p>'+
+    '<p style="margin-top:10px"><b style="color:'+c+'">'+RANKS[rs.cleared]+'</b> · '+rs.certsWon+' of '+rs.certsAll+' exams won</p></div>'+
+    '<span class="ring lg" style="--c:'+c+';--p:'+rs.pct+'" data-p="'+rs.pct+'"></span></div>'+
+    '<div class="path">'+stages+'</div>';
+}
+function route(){
+  const m = location.hash.match(/^#\/role\/(\w+)/);
+  if (m) renderRole(m[1]); else renderHome();
+  renderHud();
+  if (!location.hash.startsWith('#roles') && !location.hash.startsWith('#quiz')) window.scrollTo(0,0);
+}
+function rerender(focusKey){
+  const y = window.scrollY, m = location.hash.match(/^#\/role\/(\w+)/);
+  if (m) renderRole(m[1]); else renderHome();
+  renderHud(); window.scrollTo(0,y);
+  if (focusKey){ const el = document.querySelector('[data-k="'+focusKey.replace(/"/g,'\\"')+'"]'); if (el) el.focus({preventScroll:true}); }
+}
+
+/* ============ ACTIONS ============ */
+function checkAch(){
+  ACH.forEach(a => { if (!S.ach[a.id] && a.t()){ S.ach[a.id] = 1; save(); toast('<b>'+a.i+' Achievement: '+a.n+'</b><br><span style="color:var(--muted)">'+a.d+'</span>'); confetti(24); } });
+}
+function afterChange(){
+  const L = levelOf(xpTotal()).lvl;
+  if (L > S.lastLevel) levelBanner(L);
+  S.lastLevel = L; save();
+}
+function toggleSkill(k, ev){
+  const wasClear = snapshotClears();
+  if (S.skills[k]){ delete S.skills[k]; }
+  else {
+    S.skills[k] = 1;
+    if (ev) sparks(ev.clientX, ev.clientY);
+    toast('+10 XP · '+k);
+    if (S.daily.key === k && !S.daily.done){ S.daily.done = true; S.bonus += 15; toast('<b>Daily quest done!</b> +15 bonus XP'); confetti(30); }
+  }
+  announceClears(wasClear); afterChange(); checkAch();
+}
+function toggleCert(k, ev){
+  const wasClear = snapshotClears();
+  if (S.certs[k]){ delete S.certs[k]; }
+  else {
+    S.certs[k] = 1;
+    if (ev) sparks(ev.clientX, ev.clientY);
+    confetti(30);
+    toast('<b>Boss defeated!</b> +'+TIERS[CERTS[k].tier].xp+' XP · '+k);
+  }
+  announceClears(wasClear); afterChange(); checkAch();
+}
+function snapshotClears(){ const o = {}; ROLES.forEach(r => r.stages.forEach((st,i)=>{ o[r.id+i] = stageStats(st).clear; })); return o; }
+function announceClears(before){
+  ROLES.forEach(r => r.stages.forEach((st,i)=>{
+    if (!before[r.id+i] && stageStats(st).clear){ toast('<b>🚩 Stage cleared!</b> '+r.name+' · '+STAGE_META[i].n); confetti(40); }
+  }));
+}
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-skill],[data-cert],[data-filter],[data-qopt],[data-act]');
+  if (!t) return;
+  if (t.dataset.skill){ toggleSkill(t.dataset.skill, e); rerender(t.dataset.k); }
+  else if (t.dataset.cert){ toggleCert(t.dataset.cert, e); rerender(t.dataset.k); }
+  else if (t.dataset.filter){ filter = t.dataset.filter; rerender(); const b = document.querySelector('[data-filter="'+filter+'"]'); if (b) b.focus({preventScroll:true}); }
+  else if (t.dataset.qopt !== undefined){
+    const o = QUIZ[quiz.i].o[+t.dataset.qopt][1];
+    Object.keys(o).forEach(k => { quiz.scores[k] = (quiz.scores[k]||0) + o[k]; });
+    quiz.i++;
+    if (quiz.i >= QUIZ.length){ quiz.done = true; S.quizDone = true; save(); checkAch(); confetti(40); }
+    rerender();
+  }
+  else if (t.dataset.act === 'quizStart'){ quiz = { i:0, scores:{}, done:false, open:true }; if (location.hash.startsWith('#/role')) location.hash = '#/'; rerender(); document.getElementById('quiz').scrollIntoView({behavior: reduce?'auto':'smooth'}); }
+  else if (t.dataset.act === 'quizRestart'){ quiz = { i:0, scores:{}, done:false, open:true }; rerender(); }
+  else if (t.dataset.act === 'reset'){
+    if (confirm('Reset all progress? This cannot be undone.')){ const n = S.name; S = JSON.parse(JSON.stringify(DEFAULTS)); S.name = n; save(); quiz = { i:0, scores:{}, done:false, open:false }; route(); toast('Progress reset. Fresh start!'); }
+  }
+});
+document.getElementById('pname').addEventListener('input', e => { S.name = e.target.value.slice(0,20) || 'Player One'; save(); });
+window.addEventListener('hashchange', route);
+
+/* ============ INIT ============ */
+(function init(){
+  const today = dstr(new Date());
+  if (S.lastVisit !== today){
+    const y = new Date(); y.setDate(y.getDate()-1);
+    S.streak = (S.lastVisit === dstr(y)) ? S.streak + 1 : 1;
+    S.lastVisit = today; save();
+  }
+  S.lastLevel = levelOf(xpTotal()).lvl;
+  route();
+  setTimeout(checkAch, 600);
+})();
+</script>
+</body>
+</html>
