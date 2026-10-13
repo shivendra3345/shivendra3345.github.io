@@ -554,6 +554,8 @@
   .share-btns .share-main:hover{background:var(--accent-2); color:#fff;}
   #shareNative{display:none;}
 </style>
+<script data-goatcounter="https://spsolutions.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -1012,6 +1014,17 @@
       else { window.prompt('Copy this link:', url); }
     });
   })();
+
+  // Count downloads, email clicks and shares (GoatCounter events)
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a,button'); if (!a || !window.goatcounter || !goatcounter.count) return;
+    var name = null;
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('.sppkg') > -1) name = 'download-helpdesk-sppkg';
+    else if (href.indexOf('mailto:hello@') === 0) name = 'email-contact';
+    else if (a.closest('#shareBtns')) name = 'share-' + a.id;
+    if (name) goatcounter.count({ path: name, title: name, event: true });
+  });
 </script>
 
 </body>
