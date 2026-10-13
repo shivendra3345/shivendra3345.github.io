@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SP Solutions | SharePoint &amp; Power Platform Systems</title>
 <meta name="description" content="SharePoint, Power Platform, and Microsoft Teams systems for property management and real estate organizations. 13+ years building intranets and automation that hold up.">
+<link rel="canonical" href="https://spsolutions.tech/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SP Solutions">
+<meta property="og:title" content="SP Solutions | SharePoint &amp; Power Platform Systems">
+<meta property="og:description" content="SharePoint, Power Platform and Teams systems that hold up. Free SharePoint Helpdesk package to download. Questions? hello@spsolutions.tech">
+<meta property="og:url" content="https://spsolutions.tech/">
+<meta property="og:image" content="https://spsolutions.tech/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SP Solutions - SharePoint and Power Platform systems">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SP Solutions | SharePoint &amp; Power Platform Systems">
+<meta name="twitter:description" content="SharePoint, Power Platform and Teams systems that hold up. Free SharePoint Helpdesk package to download.">
+<meta name="twitter:image" content="https://spsolutions.tech/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -510,6 +524,35 @@
     color:var(--charcoal-soft);
     border-top:1px solid rgba(35,48,63,0.15);
   }
+
+  /* ---------- HELP CALLOUT + SHARE ---------- */
+  .help{
+    display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:space-between;
+    border:1px solid var(--accent); border-left-width:5px; background:rgba(210,135,45,.10);
+    padding:18px 22px; margin-top:28px; border-radius:4px;
+  }
+  .help strong{display:block; font-family:'Space Grotesk',sans-serif; font-size:18px; margin-bottom:2px;}
+  .help span{font-size:14px; opacity:.85;}
+  .help a.help-mail{
+    font-family:'IBM Plex Mono',monospace; font-weight:500; color:var(--accent);
+    font-size:16px; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere;
+  }
+  .contact .help{max-width:640px; margin:0 auto 40px; text-align:left;}
+  .contact .help strong{color:#fff;}
+  .share{padding:56px 0; background:var(--ink-2); color:var(--text-dark);}
+  .share .wrap{display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;}
+  .share h3{font-family:'Space Grotesk',sans-serif; font-size:22px; margin:0 0 4px; color:#fff;}
+  .share p{margin:0; color:var(--text-dark-muted); font-size:14px;}
+  .share-btns{display:flex; gap:10px; flex-wrap:wrap;}
+  .share-btns a,.share-btns button{
+    font:500 14px 'IBM Plex Sans',sans-serif; color:var(--text-dark); background:transparent;
+    border:1px solid var(--line); padding:11px 16px; min-height:44px; border-radius:3px;
+    text-decoration:none; cursor:pointer; display:inline-flex; align-items:center;
+  }
+  .share-btns a:hover,.share-btns button:hover{border-color:var(--accent); color:var(--accent);}
+  .share-btns .share-main{background:var(--accent); border-color:var(--accent); color:#16233A; font-weight:600;}
+  .share-btns .share-main:hover{background:var(--accent-2); color:#fff;}
+  #shareNative{display:none;}
 </style>
 </head>
 <body>
@@ -874,7 +917,29 @@
           <li>Use the admin provision option to finish setup.</li>
         </ol>
         <p class="download-note">Deploying a package needs App Catalog admin rights in your own SharePoint tenant. Once it is running, you can connect Power Automate flows for alerts and other automation.</p>
+      <div class="help">
+        <div><strong>Need help or have a question?</strong><span>Setup, licensing or customisation: email us and we'll reply personally.</span></div>
+        <a class="help-mail" href="mailto:hello@spsolutions.tech?subject=SharePoint%20Helpdesk%20package%20query">hello@spsolutions.tech</a>
       </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="share" class="share">
+  <div class="wrap">
+    <div>
+      <h3>Know someone who needs this?</h3>
+      <p>Share SP Solutions with your network.</p>
+    </div>
+    <div class="share-btns" id="shareBtns">
+      <button type="button" id="shareNative" class="share-main">Share&hellip;</button>
+      <a id="shLi" target="_blank" rel="noopener">LinkedIn</a>
+      <a id="shX" target="_blank" rel="noopener">X</a>
+      <a id="shFb" target="_blank" rel="noopener">Facebook</a>
+      <a id="shWa" target="_blank" rel="noopener">WhatsApp</a>
+      <a id="shMail">Email</a>
+      <button type="button" id="shCopy">Copy link</button>
     </div>
   </div>
 </section>
@@ -884,6 +949,10 @@
     <div class="stamp"><span>SP SOLUTIONS<br>ORLANDO · FL</span></div>
     <h2>Have SharePoint or Power Platform work that needs a builder?</h2>
     <p class="lede">SP Solutions takes on a limited number of independent engagements — reach out and we'll let you know if it's a fit.</p>
+    <div class="help">
+      <div><strong>For any assistance or query, email us</strong><span>Support, questions about the Helpdesk package, or a new project. We read every message.</span></div>
+      <a class="help-mail" href="mailto:hello@spsolutions.tech">hello@spsolutions.tech</a>
+    </div>
     <div class="contact-links">
       <a class="btn btn-primary" href="mailto:hello@spsolutions.tech">Email us</a>
     </div>
@@ -895,7 +964,7 @@
 </section>
 
 <footer>
-  &copy; <span id="year"></span> SP Solutions. Built &amp; maintained on spsolutions.tech.
+  &copy; <span id="year"></span> SP Solutions. Built &amp; maintained on spsolutions.tech. Questions: <a href="mailto:hello@spsolutions.tech" style="color:var(--accent)">hello@spsolutions.tech</a>
 </footer>
 
 <script>
@@ -918,6 +987,30 @@
       if (e.key === 'Escape' && nav.classList.contains('open')) { setOpen(false); btn.focus(); }
     });
     window.addEventListener('resize', function () { if (window.innerWidth > 960) setOpen(false); });
+  })();
+
+  // Share
+  (function () {
+    var url = 'https://spsolutions.tech/';
+    var title = 'SP Solutions | SharePoint & Power Platform Systems';
+    var text = 'SharePoint, Power Platform and Teams systems that hold up. Free SharePoint Helpdesk package to download.';
+    var e = encodeURIComponent;
+    document.getElementById('shLi').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + e(url);
+    document.getElementById('shX').href = 'https://twitter.com/intent/tweet?text=' + e(text) + '&url=' + e(url);
+    document.getElementById('shFb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + e(url);
+    document.getElementById('shWa').href = 'https://wa.me/?text=' + e(text + ' ' + url);
+    document.getElementById('shMail').href = 'mailto:?subject=' + e(title) + '&body=' + e(text + '\n\n' + url);
+    var nb = document.getElementById('shareNative');
+    if (navigator.share) {
+      nb.style.display = 'inline-flex';
+      nb.addEventListener('click', function () { navigator.share({ title: title, text: text, url: url }).catch(function () {}); });
+    }
+    var cb = document.getElementById('shCopy');
+    cb.addEventListener('click', function () {
+      function done() { cb.textContent = 'Copied!'; setTimeout(function () { cb.textContent = 'Copy link'; }, 2000); }
+      if (navigator.clipboard) { navigator.clipboard.writeText(url).then(done, function () { window.prompt('Copy this link:', url); }); }
+      else { window.prompt('Copy this link:', url); }
+    });
   })();
 </script>
 
