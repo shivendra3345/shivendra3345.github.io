@@ -84,8 +84,54 @@
     transition:color .15s, border-color .15s;
   }
   .nav-links a:hover{ color:var(--text-dark); border-color:var(--accent); }
+  .nav-toggle{
+    display:none;
+    width:44px; height:44px; margin-right:-10px;
+    align-items:center; justify-content:center;
+    background:transparent; border:0; padding:0;
+    color:var(--text-dark); cursor:pointer;
+  }
+  .nav-toggle .bars,
+  .nav-toggle .bars::before,
+  .nav-toggle .bars::after{
+    display:block; width:22px; height:2px;
+    background:currentColor; border-radius:1px;
+    transition:transform .2s ease, background .2s ease, top .2s ease;
+  }
+  .nav-toggle .bars{ position:relative; }
+  .nav-toggle .bars::before,
+  .nav-toggle .bars::after{ content:''; position:absolute; left:0; }
+  .nav-toggle .bars::before{ top:-7px; }
+  .nav-toggle .bars::after{ top:7px; }
+  .nav.open .nav-toggle .bars{ background:transparent; }
+  .nav.open .nav-toggle .bars::before{ top:0; transform:rotate(45deg); }
+  .nav.open .nav-toggle .bars::after{ top:0; transform:rotate(-45deg); }
+  .nav-toggle:focus-visible,
+  .nav-links a:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* Tablet and phone: links collapse into a menu opened by the button */
+  @media (max-width:960px){
+    .nav-toggle{ display:inline-flex; }
+    .nav-links{
+      display:none;
+      position:absolute; top:100%; left:0; right:0;
+      flex-direction:column; gap:0;
+      padding:6px 32px 14px;
+      background:var(--ink);
+      border-bottom:1px solid var(--line-soft);
+      box-shadow:0 16px 24px rgba(0,0,0,0.3);
+      font-size:14px;
+    }
+    .nav.open .nav-links{ display:flex; }
+    .nav-links a{
+      padding:15px 0;
+      border-bottom:1px solid var(--line-soft);
+    }
+    .nav-links a:last-child{ border-bottom:none; }
+  }
   @media (max-width:640px){
-    .nav-links{ display:none; }
+    .nav-inner{ padding:12px 20px; }
+    .nav-links{ padding-left:20px; padding-right:20px; }
   }
 
   /* ---------- HERO ---------- */
@@ -405,6 +451,57 @@
   .portfolio-body h3{ font-size:17px; font-weight:600; margin-bottom:8px; }
   .portfolio-body p{ font-size:14px; color:var(--charcoal-soft); margin:0; }
 
+  /* ---------- DOWNLOAD ---------- */
+  .download{ background:var(--paper-2); }
+  .download-card{
+    display:grid;
+    grid-template-columns:1.25fr 1fr;
+    border:1px solid rgba(35,48,63,0.2);
+    background:var(--paper);
+  }
+  @media (max-width:820px){ .download-card{ grid-template-columns:1fr; } }
+  .download-main{ padding:30px 28px; }
+  .download-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--accent-2);
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:1px dashed rgba(35,48,63,0.25);
+  }
+  .download-main h3{ font-size:24px; font-weight:600; margin-bottom:10px; }
+  .download-main p{ font-size:15.5px; color:var(--charcoal); margin:0 0 16px; }
+  .download-main ul{ margin:0 0 24px; padding-left:20px; }
+  .download-main li{ font-size:15px; margin-bottom:6px; }
+  .download-file{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--charcoal-soft);
+    margin-top:12px;
+    overflow-wrap:anywhere;
+  }
+  .download-side{
+    padding:30px 28px;
+    background:var(--ink);
+    color:var(--text-dark);
+  }
+  .download-side h4{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; font-weight:500;
+    color:var(--accent);
+    margin:0 0 16px;
+  }
+  .download-side ol{ margin:0; padding-left:20px; }
+  .download-side li{ font-size:14.5px; margin-bottom:12px; color:var(--text-dark); }
+  .download-side li::marker{ font-family:'IBM Plex Mono', monospace; color:var(--accent); }
+  .download-note{
+    margin:20px 0 0;
+    padding-top:16px;
+    border-top:1px dashed var(--line-soft);
+    font-size:13.5px;
+    color:var(--text-dark-muted);
+  }
+
   footer{
     padding:26px 0;
     text-align:center;
@@ -417,17 +514,19 @@
 </head>
 <body>
 
-<header class="nav">
+<header class="nav" id="siteNav">
   <div class="nav-inner">
     <div class="nav-brand"><span class="dot"></span>SP SOLUTIONS</div>
-    <nav class="nav-links">
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Open menu"><span class="bars" aria-hidden="true"></span></button>
+    <nav class="nav-links" id="navLinks" aria-label="Main">
       <a href="#about">About</a>
       <a href="#systems">Systems</a>
       <a href="#experience">Experience</a>
       <a href="#engagements">Engagements</a>
       <a href="#portfolio">Portfolio</a>
+      <a href="#download">Download</a>
       <a href="#contact">Contact</a>
-      <a href="/index-3.html">The IT Roadmap</a>a>
+      <a href="/index-3.html">The IT Roadmap</a>
     </nav>
   </div>
 </header>
@@ -750,6 +849,36 @@
   </div>
 </section>
 
+<section id="download" class="download">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">06</span><h2>Download</h2></div>
+    <div class="download-card">
+      <div class="download-main">
+        <div class="download-tag">PACKAGE D-01 &middot; TRIAL BUILD</div>
+        <h3>SharePoint Helpdesk</h3>
+        <p>A helpdesk built purely in SharePoint. Tickets are stored in SharePoint lists and access is managed with SharePoint groups, so there is no separate database or outside service to run.</p>
+        <ul>
+          <li>Data lives in backend SharePoint lists and SharePoint groups</li>
+          <li>Connect Power Automate to send alerts and automate follow-up work</li>
+          <li>Installs as a SharePoint web part, with an admin provision option for setup</li>
+        </ul>
+        <a class="btn btn-primary" href="LOOP-trial.sppkg" download>Download the Helpdesk package</a>
+        <div class="download-file">File: LOOP-trial.sppkg (SharePoint package)</div>
+      </div>
+      <div class="download-side">
+        <h4>HOW TO SET IT UP</h4>
+        <ol>
+          <li>Download the <span class="mono">.sppkg</span> file.</li>
+          <li>Upload it to your SharePoint App Catalog and deploy it.</li>
+          <li>Add the app to your site, then add the web part to a page.</li>
+          <li>Use the admin provision option to finish setup.</li>
+        </ol>
+        <p class="download-note">Deploying a package needs App Catalog admin rights in your own SharePoint tenant. Once it is running, you can connect Power Automate flows for alerts and other automation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="contact" class="contact">
   <div class="wrap">
     <div class="stamp"><span>SP SOLUTIONS<br>ORLANDO · FL</span></div>
@@ -771,6 +900,25 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Mobile / tablet menu
+  (function () {
+    var nav = document.getElementById('siteNav');
+    var btn = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+    function setOpen(open) {
+      nav.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    btn.addEventListener('click', function () { setOpen(!nav.classList.contains('open')); });
+    links.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('open')) { setOpen(false); btn.focus(); }
+    });
+    window.addEventListener('resize', function () { if (window.innerWidth > 960) setOpen(false); });
+  })();
 </script>
 
 </body>
